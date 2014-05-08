@@ -61,7 +61,7 @@ var Promise = require('Promise');
 var Promise = require('Promise');
 	var dreamfactory = require('dreamfactory');
 		dreamfactory.makeRequest("delete","/user/session").then(function(response) {
-			Ti.API.info("user logged out);
+			Ti.API.info("user logged out");
 		}, function(error){
 			Ti.API.info(error);
 		});
