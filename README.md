@@ -9,6 +9,8 @@ Useage :
 
 ```javascript
 //GET DATA
+//*** NOTE : If you run these in the same controller you'll only need to do the following line once.
+var Promise = require('Promise');
 var dreamfactory = require('dreamfactory');
 	dreamfactory.makeRequest("get","/db/todo").then(function(response) {
 	    Ti.API.info(response.record);
@@ -17,6 +19,7 @@ var dreamfactory = require('dreamfactory');
 	});
 
 //POST DATA
+var Promise = require('Promise');
 var body = {name:"go buy your lunch" , complete:false};
 		body = JSON.stringify(body);
 		dreamfactory.makeRequest("post","/db/todo", body).then(function(response) {
@@ -25,6 +28,7 @@ var body = {name:"go buy your lunch" , complete:false};
 			Ti.API.info(error);
 		});
 //UPDATE DATA
+var Promise = require('Promise');
 var body = {name:"go eat your lunch" , complete:false, id :1310};
 		body = JSON.stringify(body);
 		dreamfactory.makeRequest("put","/db/todo", body).then(function(response) {
@@ -34,6 +38,7 @@ var body = {name:"go eat your lunch" , complete:false, id :1310};
 		});
 
 //DELETE DATA
+var Promise = require('Promise');
 dreamfactory.makeRequest("delete","/db/todo/1310").then(function(response) {
 			Ti.API.info(response);
 		}, function(error){
