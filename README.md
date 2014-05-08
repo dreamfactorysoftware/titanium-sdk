@@ -7,7 +7,7 @@ The code below assumes they reside in the same directory as the file requring th
 
 Useage :
 
-'''javascript
+```javascript
 //GET DATA
 var dreamfactory = require('dreamfactory');
 	dreamfactory.makeRequest("get","/db/todo").then(function(response) {
@@ -40,7 +40,7 @@ dreamfactory.makeRequest("delete","/db/todo/1310").then(function(response) {
 			Ti.API.info(error);
 		});
 
-'''
+```
 
-Adding System Object Next
+Adding System Objects Next
 
