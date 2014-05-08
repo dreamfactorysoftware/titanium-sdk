@@ -44,8 +44,31 @@ dreamfactory.makeRequest("delete","/db/todo/1310").then(function(response) {
 		}, function(error){
 			Ti.API.info(error);
 		});
+		
+//LOGGING IN
+var Promise = require('Promise');
+	var dreamfactory = require('dreamfactory');
+	
+		var body = {email:"jasonsykes@dreamfactory.com" , password : "coondogg1"};
+		body = JSON.stringify(body);
+		dreamfactory.makeRequest("post","/user/session", body).then(function(response) {
+			SESSION_ID = response.session_id;
+		}, function(error){
+			Ti.API.info(error);
+		});
+
+//LOGGING OUT
+var Promise = require('Promise');
+	var dreamfactory = require('dreamfactory');
+	
+		var body = {email:"jasonsykes@dreamfactory.com" , password : "coondogg1"};
+		body = JSON.stringify(body);
+		dreamfactory.makeRequest("delete","/user/session").then(function(response) {
+			Ti.API.info("user logged out);
+		}, function(error){
+			Ti.API.info(error);
+		});
 
 ```
 
-Adding System Objects Next
 
