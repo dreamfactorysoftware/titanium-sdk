@@ -1,5 +1,5 @@
-titanium-dreamfactory
-=====================
+titanium-sdk
+============
 This module gives you the ability to consume your DreamFactory REST API from within titanium.
 
 This module uses CommonJS promises, so include the Promises.js file along with the dreamfactory.js file.
