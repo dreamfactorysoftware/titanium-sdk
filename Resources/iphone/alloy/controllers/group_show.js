@@ -89,9 +89,6 @@ function Controller() {
     });
     group_show.add(tbl);
     tbl.addEventListener("singletap", function(e) {
-        Ti.API.info(e.row.id);
-        Ti.API.info(JSON.stringify(e.source));
-        Ti.API.info(JSON.stringify(e.section));
         var arg = {
             contact_id: e.row.id,
             group_id: group_id

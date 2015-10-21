@@ -1,12 +1,6 @@
 
 var token = Ti.App.Properties.getString('token');
 
-/*
-var args = arguments[0] || {};
-var data = [];  
-data    = args;
-*/
-
 //--------------------------------------------------------------------------
 //  Navigation
 //--------------------------------------------------------------------------
@@ -113,7 +107,7 @@ var callback_contacts = function(data) {
      	
      	contacts.push({id: element.id, title: element.first_name + ' ' + element.last_name});
      });
-     Ti.API.info(contacts);
+
      tbl.setData(contacts);
 };
 

@@ -125,7 +125,6 @@ function Controller() {
                 title: element.first_name + " " + element.last_name
             });
         });
-        Ti.API.info(contacts);
         tbl.setData(contacts);
     };
     apiModule.getRecords("contact", null, token, callback_contacts);

@@ -70,7 +70,6 @@ function Controller() {
             var selected = _.filter(tbl.data[0].rows, function(obj) {
                 return 1 == obj.selected;
             });
-            Ti.API.info(selected);
             _.each(selected, function(element) {
                 Ti.API.info(element);
                 var params = {

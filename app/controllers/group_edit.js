@@ -51,8 +51,7 @@ doneBtn.addEventListener('click',function(e)
 	var params = 'filter=contact_group_id%3D' + group_id;
 	apiModule.deleteRecord('contact_group_relationship', params, token, function(data) {
 		
-		var selected = _.filter(tbl.data[0].rows, function(obj){ return obj.selected == 1; });
-		Ti.API.info(selected);	
+		var selected = _.filter(tbl.data[0].rows, function(obj){ return obj.selected == 1; });	
 	
 		_.each(selected, function(element, index, list){
 			Ti.API.info(element);	
