@@ -85,6 +85,7 @@ scrollView.add(registerEmail);
 var registerPassword = Ti.UI.createTextField({
   borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
   hintText: 'Password',
+  passwordMask: true,
   top: 155, 
   left: 25,
   right: 25,
