@@ -231,110 +231,11 @@ var callback_contactadd = function(data) {
 
 	    apiModule.setRecord('contact_info', params, token, null);
    	}
+   	
+   	var arg = {group_id: group_id};
+	Alloy.createController('group_show',arg);
 };
 
-function populateInfos(info, index) {	
-	var x = 380 * index;
-	
-	var contactType = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'Type',
-	  value: info.info_type,
-	  top: 310 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	  
-	});
-	
-	scrollView.add(contactType);
-	
-	var contactPhone = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'Phone',
-	  value: info.phone,
-	  top: 355 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactPhone);
-	
-	var contactEmail = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'Email',
-	  value: info.email,
-	  top: 400 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactEmail);
-	
-	var contactAddress = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'Address',
-	  value: info.address,
-	  top: 445 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactAddress);
-	
-	var contactCity = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'City',
-	  value: info.city,
-	  top: 490 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactCity);
-	
-	var contactState = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'State',
-	  value: info.state,
-	  top: 535 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactState);
-	
-	var contactZip = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'Zip',
-	  value: info.zip,
-	  top: 580 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactZip);
-	
-	var contactCountry = Ti.UI.createTextField({
-	  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	  hintText: 'Country',
-	  value: info.country,
-	  top: 625 + x, 
-	  left: 25,
-	  right: 25,
-	  height: 40
-	});
-	
-	scrollView.add(contactCountry);
-
-	infoCount = index + 1;
-}
 
 function addInfo(index) {	
 	var x = 380 * index;
@@ -431,57 +332,5 @@ function addInfo(index) {
 	infoCount++;
 }
 
-function saveInfo() {
-	var infos = (scrollView.children.length - 1 - 5) / 8;
-   
-   	for (var e = 0; e < infos; e++) {
-   		var start = 6 + (e * 8);
-   		var end = start + 8;
-   		
-   		var info_type = '', phone = '', email = '', address = '', city = '', state = '', zip = '', country = '';
-   		
-   		for (var x = start; x < end; x++) {
-	        if (scrollView.children[x].hintText == 'Type')
-	        	type = scrollView.children[x].value;
-	        	
-	        if (scrollView.children[x].hintText == 'Phone')
-	        	phone = scrollView.children[x].value;
-	        	
-	        if (scrollView.children[x].hintText == 'Email')
-	        	email = scrollView.children[x].value;
-	        	
-	        if (scrollView.children[x].hintText == 'Address')
-	        	address = scrollView.children[x].value;
-	        	
-	        if (scrollView.children[x].hintText == 'City')
-	        	city = scrollView.children[x].value;
-	        	
-	        if (scrollView.children[x].hintText == 'State')
-	        	state = scrollView.children[x].value;
-	       
-	       	if (scrollView.children[x].hintText == 'Zip')
-	        	zip = scrollView.children[x].value;
-	        	
-	        if (scrollView.children[x].hintText == 'Country')
-	        	country = scrollView.children[x].value;
-	    }
-	    
-	    var params = {		
-            data: {
-            	ordinal: 0,
-            	contact_id: contact_id,
-                info_type: type,
-                phone: phone,
-                email: email,
-                address: address,
-                city: city,
-                state: state,
-                zip: zip,
-                country: country
-            }     
-		};
-	    
-	    apiModule.setRecord('contact_info', params, token, null);
-   	}	
-}
+
 

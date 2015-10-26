@@ -22,6 +22,24 @@ exports.login = function(email, password, callback) {
 	xhr.send(credentials);
 };
 
+exports.logout = function(callback) {
+
+	
+	var xhr = Ti.Network.createHTTPClient({
+	     onload : function(e) {
+	     	var response = JSON.parse(this.responseData);
+	         callback(response);
+	     },
+	     onerror : function(e) {
+	         alert(this.responseText);
+	     },
+	     timeout : 5000
+	});
+	xhr.open('DELETE', INSTANCE_URL + '/api/v2/user/session');
+	xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+	xhr.send();
+};
+
 exports.register = function(first_name, last_name, email, password, callback) {
 	var user = {		
 	                    data: {

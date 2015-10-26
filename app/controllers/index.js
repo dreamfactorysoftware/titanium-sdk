@@ -46,8 +46,8 @@ scrollView.add(loginEmail);
 
 var loginPassword = Ti.UI.createTextField({
 						textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+						passwordMask: true,
   						hintText: 'Password',
-  						passwordMask: true,
   						top: 75, 
   						left: 25,
   						right: 25,

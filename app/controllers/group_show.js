@@ -72,9 +72,7 @@ var search = Ti.UI.createSearchBar({
 group_show.add(search);
 
 var tbl = Ti.UI.createTableView({
-		allowsSelection: false,
 		touchEnabled : true,
-		cancelBubble: true,
 		search: search,
 		editable: true,
         top: 45
@@ -82,14 +80,22 @@ var tbl = Ti.UI.createTableView({
 
 group_show.add(tbl);
 
-tbl.addEventListener('singletap',function(e){
-	//Ti.API.info(e.row.id);
-	//Ti.API.info(JSON.stringify(e.source));
-	//Ti.API.info(JSON.stringify(e.section));
-	
-	var arg = {contact_id:e.row.id, group_id: group_id};	
-	Alloy.createController('contact_show',arg);
-});
+var eventHandler = function(e) {	
+	var contact_id = e.row.id;
+
+	switch (e.type) {
+		case 'click':
+			var arg = {group_id: group_id, contact_id: contact_id};
+			Alloy.createController('contact_show',arg);
+			break;
+		case 'delete':
+			deleteConfirm(contact_id, e);
+			break;
+	}
+};
+
+tbl.addEventListener('click', eventHandler);
+tbl.addEventListener('delete', eventHandler);
 
 
 //--------------------------------------------------------------------------
@@ -123,4 +129,32 @@ var callback_contactids = function(data) {
 var params = '?filter=contact_group_id%3D' + group_id + '&fields=contact_id';
 apiModule.getRecords('contact_group_relationship' + params, null, token, callback_contactids);
 
-
+function deleteConfirm(contact_id, e) {
+	var row_index = e.index; 
+  	var row_obj = e.row;
+  	  
+	var dialog = Ti.UI.createAlertDialog({
+    				cancel: 1,
+    				buttonNames: ['Confirm', 'Cancel'],
+    				message: 'Do you want to delete the contact "' + row_obj.title + '"?',
+    				title: 'Delete Contact'
+  				});
+  				
+  	dialog.addEventListener('click', function(e){
+    	if (e.index === e.source.cancel){
+      		tbl.insertRowBefore(row_index, row_obj);
+    	}
+    	else {
+      		var params = 'ids=' + contact_id;
+    		apiModule.deleteRecord('contact', params, token, null);
+    		
+    		var params = 'filter=contact_id%3D' + contact_id;
+    		apiModule.deleteRecord('contact_group_relationship', params, token, null);
+    		
+    		var params = 'filter=contact_id%3D' + contact_id;
+    		apiModule.deleteRecord('contact_info', params, token, null);
+    	}
+  	});
+  
+  	dialog.show();
+}

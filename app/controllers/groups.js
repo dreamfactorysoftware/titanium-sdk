@@ -21,19 +21,21 @@ var imageView = Ti.UI.createImageView({
 
 groups.titleControl = imageView;
 
-var backBtn = Ti.UI.createButton({ title: 'Logout' });
-groups.leftNavButton = backBtn;
+var logoutkBtn = Ti.UI.createButton({ title: 'Logout' });
+groups.leftNavButton = logoutkBtn;
 
 var addBtn = Ti.UI.createButton({ systemButton:Titanium.UI.iPhone.SystemButton.ADD });
 groups.rightNavButton = addBtn;
 
-backBtn.addEventListener('click',function(e)
+logoutkBtn.addEventListener('click',function(e)
 {
-   //Alloy.createController('groups').getView().open();
+   apiModule.logout(function(data) {
+   		Ti.App.Properties.setString('token', '');
+   		Alloy.createController('index');
+   });
 });
 
-addBtn.addEventListener('click',function(e)
-{
+addBtn.addEventListener('click',function(e) {
    Alloy.createController('group_add');
 });
 
@@ -60,10 +62,25 @@ var tbl = Ti.UI.createTableView({
 
 groups.add(tbl);
 
-tbl.addEventListener('click',function(e){
-	var arg = {group_id:e.row.id};
-	Alloy.createController('group_show',arg);
-});
+var eventHandler = function(e) {	
+	var group_id = e.row.id;
+	
+	switch (e.type) {
+		case 'click':
+			var arg = {group_id:e.row.id};
+			Alloy.createController('group_show',arg);
+			break;
+		case 'delete':
+			deleteConfirm(group_id, e);
+			break;
+		default:
+			Ti.API.info('none');
+	}
+};
+
+tbl.addEventListener('click', eventHandler);
+tbl.addEventListener('delete', eventHandler);
+
 
 //--------------------------------------------------------------------------
 //  Functions
@@ -81,4 +98,30 @@ var callback_groups = function(data) {
 apiModule.getRecords('contact_group', null, token, callback_groups);
 
 
+function deleteConfirm(group_id, e) {
+	var row_index = e.index; 
+  	var row_obj = e.row;
+  	  
+	var dialog = Ti.UI.createAlertDialog({
+    				cancel: 1,
+    				buttonNames: ['Confirm', 'Cancel'],
+    				message: 'Do you want to delete the group "' + row_obj.title + '"?',
+    				title: 'Delete Group'
+  				});
+  				
+  	dialog.addEventListener('click', function(e){
+    	if (e.index === e.source.cancel){
+      		tbl.insertRowBefore(row_index, row_obj);
+    	}
+    	else {
+      		var params = 'ids=' + group_id;
+    		apiModule.deleteRecord('contact_group', params, token, null);
+    		
+    		var params = 'filter=contact_group_id%3D' + group_id;
+    		apiModule.deleteRecord('contact_group_relationship', params, token, null);
+    	}
+  	});
+  
+  	dialog.show();
+}
 
