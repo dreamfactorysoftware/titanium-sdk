@@ -53,11 +53,21 @@ var search = Ti.UI.createSearchBar({
 
 groups.add(search);
 
+search.addEventListener('singletap',function(){ 
+	search.focus(); 
+});
+
+var hView = Ti.UI.createView({
+    height : 1,
+    backgroundColor: '#f0f0f0'
+});
+
 var tbl = Ti.UI.createTableView({
 				touchEnabled : true,
 				search: search,
 				editable: true,
 	        	top: 43,
+	        	headerView: hView
 			});
 
 groups.add(tbl);
@@ -87,12 +97,25 @@ tbl.addEventListener('delete', eventHandler);
 //--------------------------------------------------------------------------
 
 var callback_groups = function(data) {
-	var group = [];
+	var groups = [];
 	_.each(data.resource, function(element, index, list){
-		group.push({id: element.id, title: element.name});
+		var section = element.name.charAt(0);
+		groups.push({id: element.id, title: element.name, section: section.toUpperCase()});
 	});
 	 
-	tbl.setData(group);
+	var dat = []; 
+	var sortedGroups = _.sortBy(groups, function (i) { return i.title.toLowerCase(); });
+	var sections =  _.groupBy(sortedGroups, "section");
+	
+	_.each(sections, function(section, key) {
+		var sec = Ti.UI.createTableViewSection({ headerTitle: key });
+		_.each(section, function(groupObj) {
+ 		 	sec.add(Ti.UI.createTableViewRow({id: groupObj.id, title: groupObj.title, section: groupObj.section}));
+		});
+		dat.push(sec);
+	});
+	
+	tbl.setData(dat);	 
 };
 
 apiModule.getRecords('contact_group', null, token, callback_groups);

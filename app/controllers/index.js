@@ -90,6 +90,16 @@ registerBtn.addEventListener('click', function(e) {
 	Alloy.createController('register');
 });
 
+var versionNumber = Ti.UI.createLabel({
+      color: 'black',
+      font: { fontSize:14 },
+      textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+      top: 250,
+      text: 'Titanium Address Book v' + version
+   });
+
+scrollView.add(versionNumber);
+
 //--------------------------------------------------------------------------
 //  Functions
 //--------------------------------------------------------------------------
