@@ -24,8 +24,6 @@ var imageView = Ti.UI.createImageView({
 
 group_show.titleControl = imageView;
 
-
-
 var backBtn = Ti.UI.createButton({ title: 'Back' });
 group_show.leftNavButton = backBtn;
 
@@ -43,7 +41,7 @@ group_show.open();
 
 backBtn.addEventListener('click',function(e)
 {
-   Alloy.createController('groups');
+   Alloy.createController('groups');  
 });
 
 editBtn.addEventListener('click',function(e)
@@ -62,7 +60,6 @@ addBtn.addEventListener('click',function(e)
 //  Main UI
 //--------------------------------------------------------------------------
 
-
 var search = Ti.UI.createSearchBar({
     barColor:'#f0f0f0', 
     borderColor:'#f0f0f0',
@@ -71,11 +68,21 @@ var search = Ti.UI.createSearchBar({
 
 group_show.add(search);
 
+search.addEventListener('singletap',function(){ 
+	search.focus(); 
+});
+
+var hView = Ti.UI.createView({
+    height : 1,
+    backgroundColor: '#f0f0f0'
+});
+
 var tbl = Ti.UI.createTableView({
 		touchEnabled : true,
 		search: search,
 		editable: true,
-        top: 45
+        top: 45,
+        headerView: hView
 });
 
 group_show.add(tbl);
@@ -104,13 +111,25 @@ tbl.addEventListener('delete', eventHandler);
 
 
 var callback_contacts = function(data) {
-	var contacts = [];
-     _.each(data.resource, function(element, index, list){
-     	
-     	contacts.push({id: element.id, title: element.first_name + ' ' + element.last_name});
-     });
-     
-     tbl.setData(contacts);
+    var contacts = [];
+	_.each(data.resource, function(element, index, list){
+		var section = element.last_name.charAt(0);
+		contacts.push({id: element.id, title: element.first_name + ' ' + element.last_name, section: section.toUpperCase()});
+	});
+	 
+	var dat = []; 
+	var sortedContacts = _.sortBy(contacts, function (i) { return i.section.toLowerCase(); });
+	var sections =  _.groupBy(sortedContacts, "section");
+	
+	_.each(sections, function(section, key) {
+		var sec = Ti.UI.createTableViewSection({ headerTitle: key });
+		_.each(section, function(groupObj) {
+ 		 	sec.add(Ti.UI.createTableViewRow({id: groupObj.id, title: groupObj.title, section: groupObj.section}));
+		});
+		dat.push(sec);
+	});
+	
+	tbl.setData(dat);	
 };
 
 var callback_contactids = function(data) {

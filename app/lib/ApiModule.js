@@ -13,7 +13,15 @@ exports.login = function(email, password, callback) {
 	         callback(response);
 	     },
 	     onerror : function(e) {
-	         alert(this.responseText);
+	     	var response = JSON.parse(this.responseText);
+	     	Ti.API.info(JSON.stringify(response.error.message));
+	     	
+	     	var alert = Titanium.UI.createAlertDialog({
+							title: 'Login Failed',
+							message: response.error.message,
+						});
+
+	         alert.show();
 	     },
 	     timeout : 5000
 	});

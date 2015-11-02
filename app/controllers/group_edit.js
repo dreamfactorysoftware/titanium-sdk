@@ -51,18 +51,20 @@ doneBtn.addEventListener('click',function(e)
 	var params = 'filter=contact_group_id%3D' + group_id;
 	apiModule.deleteRecord('contact_group_relationship', params, token, function(data) {
 		
-		var selected = _.filter(tbl.data[0].rows, function(obj){ return obj.selected == 1; });	
-	
-		_.each(selected, function(element, index, list){
-			Ti.API.info(element);	
-			var params = {		
-	            data: {
-	                contact_group_id: group_id,
-	                contact_id: element.id
-	            }     
-			};
+		_.each(tbl.data, function(sec, id){
+			var selected = _.filter(tbl.data[id].rows, function(obj){ return obj.selected == 1; });	
 		
-			apiModule.setRecord('contact_group_relationship', params, token, null);
+			_.each(selected, function(element, index, list){
+					var params = {		
+		            data: {
+		                contact_group_id: group_id,
+		                contact_id: element.id
+		            }     
+				};
+			
+				apiModule.setRecord('contact_group_relationship', params, token, null);
+			});
+		
 		});
 		
 		var group = {		
@@ -92,10 +94,15 @@ group_edit.titleControl = imageView;
 var tf1 = Ti.UI.createTextField({
     color:'#336699',
     top:15,
-	hintText: 'Group Name'
+	hintText: 'Group Name',
+	editable: true
 });
 
 group_edit.add(tf1);
+
+tf1.addEventListener('singletap',function(){ 
+	tf1.focus(); 
+});
 
 var search = Titanium.UI.createSearchBar({
     barColor:'#f0f0f0', 
@@ -105,10 +112,20 @@ var search = Titanium.UI.createSearchBar({
 
 group_edit.add(search);
 
+search.addEventListener('singletap',function(){ 
+	search.focus(); 
+});
+
+var hView = Ti.UI.createView({
+    height : 1,
+    backgroundColor: '#f0f0f0'
+});
+
 var tbl = Titanium.UI.createTableView({
 		allowsSelection:true,
 		search: search,
-        top: 95
+        top: 95,
+        headerView: hView
 });
 
 group_edit.add(tbl);
@@ -135,19 +152,34 @@ var callback_selectedcontacts = function(data) {
      	selected_contacts.push(element.contact_id);
      });
      
-     apiModule.getRecords('contact', null, token, function(data) {
-     	var contacts = [];
-	     _.each(data.resource, function(element, index, list){
-	     	if(selected_contacts.indexOf(element.id) > -1) {
-	     		contacts.push({id: element.id, title: element.first_name + ' ' + element.last_name, selected: 1, backgroundColor: '#66bbb0'});
-	     	}
-	     	else {
-	     		contacts.push({id: element.id, title: element.first_name + ' ' + element.last_name, selected: 0, backgroundColor: '#fff'});
-	     	}
-	     });
-	     
-	     tbl.setData(contacts);
-     });
+	apiModule.getRecords('contact', null, token, function(data) {     
+		var contacts = [];
+		_.each(data.resource, function(element, index, list){
+			var section = element.last_name.charAt(0);
+			contacts.push({id: element.id, title: element.first_name + ' ' + element.last_name, section: section.toUpperCase()});
+		});
+		
+		Ti.API.info(JSON.stringify(contacts));
+		 
+		var dat = []; 
+		var sortedContacts = _.sortBy(contacts, function (i) { return i.section.toLowerCase(); });
+		var sections =  _.groupBy(sortedContacts, "section");
+		
+		_.each(sections, function(section, key) {
+			var sec = Ti.UI.createTableViewSection({ headerTitle: key });
+			_.each(section, function(groupObj) {
+				if(selected_contacts.indexOf(groupObj.id) > -1) {
+					sec.add(Ti.UI.createTableViewRow({id: groupObj.id, title: groupObj.title, section: groupObj.section, selected: 1, backgroundColor: '#66bbb0'}));
+				}
+				else {
+	 		 		sec.add(Ti.UI.createTableViewRow({id: groupObj.id, title: groupObj.title, section: groupObj.section, selected: 0, backgroundColor: '#fff'}));
+	 		 	}
+			});
+			dat.push(sec);
+		});
+		
+		tbl.setData(dat);
+	});     
 };
 
 function callback_groupname(data) {
